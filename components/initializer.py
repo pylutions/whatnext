@@ -1,7 +1,6 @@
 import streamlit as st
 from streamlit.components.v1 import html
 import components.data_handler as data_handler
-from streamlit_javascript import st_javascript
 
 
 def initialize():
@@ -96,7 +95,7 @@ def stylize():
             """
 
     if script:
-        return_value = st_javascript("""
+        return_value = ("""
             // Define the color you want to replace
             const oldColor = 'red';
             const newColor = 'blue';
@@ -124,7 +123,7 @@ def stylize():
             return elements.length;
         """)
         #scr = f"<script>{sc}</script>"
-        st.markdown(f"Return value was: {return_value}")
+        #st.markdown(f"Return value was: {return_value}")
 
         #st.markdown(scr, unsafe_allow_html=True)
 
