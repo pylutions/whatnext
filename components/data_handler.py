@@ -4,6 +4,8 @@ import pandas as pd
 from datetime import datetime
 
 
+
+
 #@st.cache_resource
 def get_database_connection():
     dbc = mysql.connector.connect(**st.secrets["feature_db"])
@@ -47,13 +49,13 @@ def version_control(version, version_note):
             ('products',
              "(product_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, product VARCHAR(255), url VARCHAR(255), state VARCHAR(255))"),
             ('users',
-             "(user_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, user_mail VARCHAR(255) UNIQUE, essential BOOL, newsletter BOOL, join_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)"),
+             "(user_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, user_mail VARCHAR(255), essential BOOL, newsletter BOOL, join_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, auto_approve_comments BOOL DEFAULT 0)"),
             ('features',
              "(feature_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, product_id int, feature_name VARCHAR(255), feature_description VARCHAR(1023), tags VARCHAR(1023), category VARCHAR(255), submitted TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, done_date TIMESTAMP, submitter int, vote_count int, status VARCHAR(255), FOREIGN KEY (product_id) REFERENCES products(product_id), FOREIGN KEY (submitter) REFERENCES users(user_id))"),
             ('upvotes',
              "(vote_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, feature_id INT, user_id INT, FOREIGN KEY (feature_id) REFERENCES features(feature_id), FOREIGN KEY (user_id) REFERENCES users(user_id))"),
             ('comments',
-             "(comment_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, comment VARCHAR(1023), vote_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, feature_id INT, user_id INT, FOREIGN KEY (feature_id) REFERENCES features(feature_id), FOREIGN KEY (user_id) REFERENCES users(user_id))")
+             "(comment_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, comment VARCHAR(1023), vote_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, feature_id INT, user_id INT, status VARCHAR(255), FOREIGN KEY (feature_id) REFERENCES features(feature_id), FOREIGN KEY (user_id) REFERENCES users(user_id))")
         )
 
         for table in tables:
@@ -69,30 +71,6 @@ def version_control(version, version_note):
 
 
 
-def create_tables():
-    dbc = get_database_connection()
-    cursor = dbc.cursor()
-    query = "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'products'"
-    cursor.execute(query)
-    if cursor.fetchone()[0] == 1:
-        cursor.close()
-    else:
-        tables = (
-            ('version_history', "version INT PRIMARY KEY, version_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, version_note VARCHAR(1023)"),
-            ('products', "(product_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, product VARCHAR(255), url VARCHAR(255), state VARCHAR(255))"),
-            ('users',
-                     "(user_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, user_mail VARCHAR(255) UNIQUE, essential BOOL, newsletter BOOL, join_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)"),
-            ('features',
-                     "(feature_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, product_id int, feature_name VARCHAR(255), feature_description VARCHAR(1023), tags VARCHAR(1023), category VARCHAR(255), submitted TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, done_date TIMESTAMP, submitter int, vote_count int, status VARCHAR(255), FOREIGN KEY (product_id) REFERENCES products(product_id), FOREIGN KEY (submitter) REFERENCES users(user_id))"),
-            ('upvotes',
-                     "(vote_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, feature_id INT, user_id INT, FOREIGN KEY (feature_id) REFERENCES features(feature_id), FOREIGN KEY (user_id) REFERENCES users(user_id))"),
-            ('comments', "(comment_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, comment VARCHAR(1023), vote_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, feature_id INT, user_id INT, FOREIGN KEY (feature_id) REFERENCES features(feature_id), FOREIGN KEY (user_id) REFERENCES users(user_id))")
-        )
-
-        for table in tables:
-            query = f"CREATE TABLE IF NOT EXISTS {table[0]} {table[1]}"
-            cursor.execute(query)
-        cursor.close()
 
 
 def fetch_from_table(table_name):
@@ -120,6 +98,9 @@ def fetch_features_by_status_with_mail(status, page):
     query = "SELECT features.*, users.user_mail FROM features JOIN users ON features.submitter = users.user_id" + clause +" LIMIT " + limit
     return fetch_features(query)
 
+def fetch_feature_by_id(fid):
+    query = f"SELECT * FROM features WHERE feature_id={fid}"
+    return fetch_features(query)
 
 def fetch_features(query):
     dbc = get_database_connection()
@@ -171,19 +152,29 @@ def create_user(user_mail, newsletter):
     dbc.commit()
     return cursor.lastrowid
 
+def update_user(user_id, user_mail, essential, newsletter):
+    clause = f" WHERE user_id='{user_id}'"
+    query = f"UPDATE users SET essential={essential}, newsletter={newsletter}, user_mail='{user_mail}'" + clause
+    dbc = get_database_connection()
+    cursor = dbc.cursor()
+    cursor.execute(query)
+    dbc.commit()
 
-def get_user_id(user_mail, newsletter):
+
+def get_user_id(user_mail, essential, newsletter):
     clause = f" WHERE user_mail='{user_mail}'"
-    query = "SELECT user_id FROM users" + clause
+    query = "SELECT user_id, essential, newsletter FROM users" + clause
     dbc = get_database_connection()
     cursor = dbc.cursor()
     cursor.execute(query)
     result = cursor.fetchone()
     if result:
         st.session_state['user_id'] = result[0]
+        st.session_state['essential'] = result[1]
+        st.session_state['newsletter'] = result[2]
     else:
-        sql = "INSERT IGNORE INTO users (user_mail, newsletter) VALUES (%s, %s)"
-        values = (user_mail, newsletter)
+        sql = "INSERT IGNORE INTO users (user_mail, essential, newsletter) VALUES (%s, %s, %s)"
+        values = (user_mail, essential, newsletter)
         cursor.execute(sql, values)
         dbc.commit()
         st.session_state['user_id'] = cursor.lastrowid
@@ -213,3 +204,6 @@ def submit_product(product_name, product_url):
     dbc.commit()
     st.session_state['has_products'] = get_products(True)
     return 'Product created successfully'
+
+
+

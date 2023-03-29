@@ -61,7 +61,7 @@ if __name__ == "__main__":
                                 check = False
                             c3.checkbox('Active', value=check, key="active"+product_id)
 
-                        edit_product = st.form_submit_button("Edit")
+                        edit_product = st.form_submit_button("Save")
                         if edit_product:
                             st.write('edit')
 

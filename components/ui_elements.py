@@ -87,8 +87,14 @@ def update(feature):
     st.write('Update: '+str(feature))
 
 
+def show(feature):
+    st.session_state['show_feature'] = True
+    st.session_state['active_feature'] = feature
 
 
+def show_feature(feature):
+    feat = data_handler.fetch_feature_by_id(feature)
+    st.write(feat)
 
 def upvote(feature_id):
     if product_manager.check_user():
@@ -109,7 +115,8 @@ def list_view(type):
             st.write('---')
             for ind, feature in df.iterrows():
                 feature_id = feature.feature_id
-                col1, col2, col3, col4 = st.columns([2, 4, 1, 1])
+                clbt, col1, col2, col3, col4 = st.columns([1, 2, 3, 1, 1])
+                clbt.button('Show', key='show' + str(ind), on_click=show, args=[feature_id])
                 col1.write(feature.feature_name)
                 col2.write(feature.feature_description)
                 col3.write(str(feature.vote_count))

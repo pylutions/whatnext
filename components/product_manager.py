@@ -42,10 +42,12 @@ def check_user():
             if st.session_state.checked_mail == st.session_state.user_mail:
                 return True
         if is_valid(st.session_state.user_mail):
-            data_handler.get_user_id(st.session_state.user_mail, st.session_state.user_agreement)
+            data_handler.get_user_id(st.session_state.user_mail, st.session_state.user_essential, st.session_state.user_agreement)
             if 'user_id' in st.session_state:
                 st.session_state['checked_mail'] = st.session_state.user_mail
                 return True
+            else:
+                return False
         else:
             st.session_state['display_user_error'] = ('error', 'Invalid email address!')
             scr = """

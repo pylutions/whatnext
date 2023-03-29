@@ -36,6 +36,12 @@ def initialize():
             st.session_state['admin_page'] = 0
             st.session_state['step_size'] = 10
             st.session_state['init'] = True
+            st.session_state['show_feature'] = False
+            st.session_state['user_id'] = 0
+            st.session_state['user_mail'] = ''
+            st.session_state['registered'] = False
+            st.session_state['user_essential'] = True
+            st.session_state['user_agreement'] = True
 
 
 def style_a_button():
