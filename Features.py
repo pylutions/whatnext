@@ -10,9 +10,9 @@ def show_sidebar():
         st.header("Welcome to the public backlog!")
         st.write("Upvote the features you care about or submit new requests.")
 
-        product_index = product_manager.get_product_index()
-        st.session_state['selected_product'] = st.selectbox('Product', options=st.session_state['products'], index=product_index)
-        st.write('---')
+        #product_index = product_manager.get_product_index()
+        #st.session_state['selected_product'] = st.selectbox('Product', options=st.session_state['products'], index=product_index)
+        #st.write('---')
         st.write("For participating, please enter a valid e-mail address.")
         if 'user_mail' in st.session_state:
             mail = st.session_state.user_mail
@@ -45,6 +45,11 @@ if __name__ == "__main__":
     if st.session_state['has_products']:
         show_sidebar()
         feedback = st.sidebar.empty()
+        #
+        with tcol2:
+            product_index = product_manager.get_product_index()
+            st.session_state['selected_product'] = st.selectbox('Product', options=st.session_state['products'],
+                                                                index=product_index)
         url = product_manager.get_product_url()
         tcol2.write("Current product is: **" + st.session_state.selected_product + "** (more: " + url + ")")
         tab1, tab2, tab3 = st.tabs(['Feature backlog', 'Submit feature', 'Account'])

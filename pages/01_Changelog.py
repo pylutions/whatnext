@@ -10,9 +10,16 @@ if __name__ == "__main__":
     st.set_page_config(page_title="What next?", page_icon="icon.ico", layout="wide")
     initializer.stylize()
     ui_elements.hide_header()
-    st.title('Changelog')
+    tcol1, tcol2 = st.columns(2)
+    tcol1.title('Changelog')
     initializer.initialize()
     if st.session_state['has_products']:
+        with tcol2:
+            product_index = product_manager.get_product_index()
+            st.session_state['selected_product'] = st.selectbox('Product', options=st.session_state['products'],
+                                                                index=product_index)
+        url = product_manager.get_product_url()
+        tcol2.write("Current product is: **" + st.session_state.selected_product + "** (more: " + url + ")")
 
         df = data_handler.fetch_features_by_product_status(product_manager.get_product_table_id(),
                                                            'done',
