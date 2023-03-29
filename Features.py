@@ -3,7 +3,6 @@ import components.data_handler as data_handler
 import components.initializer as initializer
 import components.product_manager as product_manager
 import components.ui_elements as ui_elements
-from streamlit_card import card
 
 
 def show_sidebar():
