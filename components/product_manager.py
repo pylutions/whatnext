@@ -1,6 +1,7 @@
 import streamlit as st
 import components.data_handler as data_handler
 import re
+from streamlit.components.v1 import html
 
 
 categories = ['Feature', 'Bug']
@@ -47,6 +48,10 @@ def check_user():
                 return True
         else:
             st.session_state['display_user_error'] = ('error', 'Invalid email address!')
+            scr = """
+                     <script type="text/javascript">alert("For voting and submitting please enter a valid email address in the sidebar.");</script>
+                     """
+            html(scr)
             return False
     else:
         return False
