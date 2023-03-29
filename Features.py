@@ -67,7 +67,6 @@ if __name__ == "__main__":
     ui_elements.hide_header()
     tcol1, tcol2 = st.columns(2)
     tcol1.title('What next?')
-
     initializer.initialize()
 
 

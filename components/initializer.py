@@ -23,7 +23,8 @@ def initialize():
                 st.session_state['query_feature'] = st.session_state.query_params['feature'][0]
             if 'user_mail' in st.session_state.query_params:
                 st.session_state['user_mail'] = st.session_state.query_params['user_mail'][0]
-
+            else:
+                st.session_state['user_mail'] = ''
             st.session_state['tenant'] = st.secrets['tenant']
 
 
@@ -38,7 +39,7 @@ def initialize():
             st.session_state['init'] = True
             st.session_state['show_feature'] = False
             st.session_state['user_id'] = 0
-            st.session_state['user_mail'] = ''
+
             st.session_state['registered'] = False
             st.session_state['user_essential'] = True
             st.session_state['user_agreement'] = True
