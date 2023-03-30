@@ -25,49 +25,52 @@ def get_products(force):
 
 
 def version_control(version, version_note):
-    dbc = get_database_connection()
-    cursor = dbc.cursor()
-    query = "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'version_history'"
-    cursor.execute(query)
-    if cursor.fetchone()[0] == 1:
-        query = "SELECT version from version_history"
+    try:
+        dbc = get_database_connection()
+        cursor = dbc.cursor()
+        query = "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'version_history'"
         cursor.execute(query)
-        fetched = cursor.fetchall()
-        cols = cursor.column_names
-        df = pd.DataFrame(fetched, columns=cols)
-
-        cursor.close()
-        if df['version'].max() < version:
-            st.write('upgrade required')
-            return False
-        else:
-            return True
-    else:
-        tables = (
-            ('version_history',
-             "(version INT PRIMARY KEY, version_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, version_note VARCHAR(1023))"),
-            ('products',
-             "(product_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, product VARCHAR(255), url VARCHAR(255), state VARCHAR(255))"),
-            ('users',
-             "(user_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, user_mail VARCHAR(255), essential BOOL, newsletter BOOL, join_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, auto_approve_comments BOOL DEFAULT 0), banned BOOL DEFAULT 0"),
-            ('features',
-             "(feature_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, product_id int, feature_name VARCHAR(255), feature_description VARCHAR(1023), tags VARCHAR(1023), category VARCHAR(255), submitted TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, done_date TIMESTAMP, submitter int, vote_count int, status VARCHAR(255), FOREIGN KEY (product_id) REFERENCES products(product_id), FOREIGN KEY (submitter) REFERENCES users(user_id))"),
-            ('upvotes',
-             "(vote_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, feature_id INT, user_id INT, FOREIGN KEY (feature_id) REFERENCES features(feature_id), FOREIGN KEY (user_id) REFERENCES users(user_id))"),
-            ('comments',
-             "(comment_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, comment VARCHAR(1023), vote_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, feature_id INT, user_id INT, status VARCHAR(255), FOREIGN KEY (feature_id) REFERENCES features(feature_id), FOREIGN KEY (user_id) REFERENCES users(user_id))")
-        )
-
-        for table in tables:
-            query = f"CREATE TABLE IF NOT EXISTS {table[0]} {table[1]}"
+        if cursor.fetchone()[0] == 1:
+            query = "SELECT version from version_history"
             cursor.execute(query)
-        sql = "INSERT IGNORE INTO version_history (version, version_note) VALUES (%s, %s)"
-        values = (version, version_note)
-        cursor.execute(sql, values)
-        dbc.commit()
+            fetched = cursor.fetchall()
+            cols = cursor.column_names
+            df = pd.DataFrame(fetched, columns=cols)
 
-        cursor.close()
-        return True
+            cursor.close()
+            if df['version'].max() < version:
+                st.write('upgrade required')
+                return False
+            else:
+                return True
+        else:
+            tables = (
+                ('version_history',
+                 "(version INT PRIMARY KEY, version_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, version_note VARCHAR(1023))"),
+                ('products',
+                 "(product_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, product VARCHAR(255), url VARCHAR(255), state VARCHAR(255))"),
+                ('users',
+                 "(user_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, user_mail VARCHAR(255), essential BOOL, newsletter BOOL, join_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, auto_approve_comments BOOL DEFAULT 0), banned BOOL DEFAULT 0"),
+                ('features',
+                 "(feature_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, product_id int, feature_name VARCHAR(255), feature_description VARCHAR(1023), tags VARCHAR(1023), category VARCHAR(255), submitted TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, done_date TIMESTAMP, submitter int, vote_count int, status VARCHAR(255), FOREIGN KEY (product_id) REFERENCES products(product_id), FOREIGN KEY (submitter) REFERENCES users(user_id))"),
+                ('upvotes',
+                 "(vote_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, feature_id INT, user_id INT, FOREIGN KEY (feature_id) REFERENCES features(feature_id), FOREIGN KEY (user_id) REFERENCES users(user_id))"),
+                ('comments',
+                 "(comment_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, comment VARCHAR(1023), vote_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, feature_id INT, user_id INT, status VARCHAR(255), FOREIGN KEY (feature_id) REFERENCES features(feature_id), FOREIGN KEY (user_id) REFERENCES users(user_id))")
+            )
+
+            for table in tables:
+                query = f"CREATE TABLE IF NOT EXISTS {table[0]} {table[1]}"
+                cursor.execute(query)
+            sql = "INSERT IGNORE INTO version_history (version, version_note) VALUES (%s, %s)"
+            values = (version, version_note)
+            cursor.execute(sql, values)
+            dbc.commit()
+
+            cursor.close()
+            return True
+    except:
+        st.error('Something went wrong with the database connection. If you are the admin, please check the configuration.')
 
 
 

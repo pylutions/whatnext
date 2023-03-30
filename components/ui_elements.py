@@ -182,6 +182,35 @@ def list_view(type):
 
             if reload:
                 st.experimental_rerun()
+    if type == 'changelog':
+        if 'changelog_page' not in st.session_state:
+            st.session_state['changelog_page'] = 0
+            st.session_state['changelog_next'] = False
+
+        df = data_handler.fetch_features_by_product_status(product_manager.get_product_table_id(),
+                                                           'done',
+                                                           st.session_state.changelog_page,
+                                                           "done_date"
+                                                           )
+
+        if not df.empty or st.session_state.changelog_next:
+            st.write('---')
+            for ind, feature in df.iterrows():
+                feature_id = feature.feature_id
+                clbt, col1, col2, col3, col4 = st.columns([1, 2, 3, 1, 1])
+                clbt.button('Show', key='show' + str(ind), on_click=show, args=[feature_id])
+                col1.write(feature.feature_name)
+                col2.write(feature.feature_description)
+                col3.write(str(feature.vote_count))
+                st.write('---')
+                st.write('---')
+            st.session_state['changelog_page'], st.session_state['changelog_next'], reload = page_browser(
+                df, st.session_state['changelog_page'], 'changelog_page')
+
+            if reload:
+                st.experimental_rerun()
+        else:
+            st.write('No finished feature requests.')
 
 
 

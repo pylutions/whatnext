@@ -19,9 +19,9 @@ if __name__ == "__main__":
             password = st.text_input('Password', type="password")
             login = st.form_submit_button("Login")
             if login:
-                if user_name == st.secrets.admin and password == st.secrets.password:
+                if user_name == st.session_state['admin'] and password == st.secrets['tenant']['password']:
                     st.session_state['admin_logged_in'] = True
-                    st.session_state['admin'] = user_name
+                    #st.session_state['admin'] = user_name
                     data_handler.create_user('Admin', 0)
                     st.experimental_rerun()
                 else:

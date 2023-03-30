@@ -20,23 +20,7 @@ if __name__ == "__main__":
         url = product_manager.get_product_url()
         tcol2.write("Current product is: **" + st.session_state.selected_product + "** (more: " + url + ")")
 
-        df = data_handler.fetch_features_by_product_status(product_manager.get_product_table_id(),
-                                                           'done',
-                                                            st.session_state.feature_page,
-                                                           "done_date"
-                                                           )
-        if not df.empty or st.session_state['next_page']:
-            st.write('---')
-            for ind, feature in df.iterrows():
-                feature_id = feature.feature_id
-                col1, col2, col3, col4 = st.columns([2, 4, 1, 1])
-                col1.write(feature.feature_name)
-                col2.write(feature.feature_description)
-                col3.write(str(feature.vote_count))
-                st.write('---')
-            ui_elements.page_browser(df)
-        else:
-            st.write('No implemented features yet.')
+        ui_elements.list_view('changelog')
 
 
 

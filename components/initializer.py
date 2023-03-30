@@ -8,45 +8,70 @@ def initialize():
         st.session_state['version'] = 1
         st.session_state['version_note'] = 'Initial version'
 
-        control = data_handler.version_control(st.session_state['version'], st.session_state['version_note'])
-
-        if control:
-            if 'has_products' not in st.session_state:
-                st.session_state['has_products'] = data_handler.get_products(False)
-
-
-            # query params
-            st.session_state.query_params = st.experimental_get_query_params()
-            if 'product' in st.session_state.query_params:
-                st.session_state['query_product'] = st.session_state.query_params['product'][0]
-            if 'feature' in st.session_state.query_params:
-                st.session_state['query_feature'] = st.session_state.query_params['feature'][0]
-            if 'user_mail' in st.session_state.query_params:
-                st.session_state['user_mail'] = st.session_state.query_params['user_mail'][0]
+        if 'tenant' in st.secrets:
+            if 'name' in st.secrets['tenant']:
+                st.session_state['tenant'] = st.secrets['tenant']['name']
             else:
-                st.session_state['user_mail'] = ''
-            st.session_state['tenant'] = st.secrets['tenant']
+                st.error("Please add tenant name in the configuration.")
+                return
+            if 'admin' in st.secrets['tenant']:
+                st.session_state['admin'] = st.secrets['tenant']['admin']
+            else:
+                st.error("Please add a tenant admin in the configuration.")
+                return
+            if 'password' not in st.secrets['tenant']:
+                st.error("Please add a tenant admin password in the configuration.")
+                return
+        else:
+            st.error("Please add tenant information in the configuration.")
+            return
 
-            # Theme
-            st.session_state['primaryColor'] = st.get_option('theme.primaryColor')
-            st.session_state['backgroundColor'] = st.get_option('theme.backgroundColor')
-            st.session_state['secondaryBackgroundColor'] = st.get_option('theme.secondaryBackgroundColor')
-            st.session_state['textColor'] = st.get_option('theme.textColor')
+        if 'feature_db' in st.secrets:
+            control = data_handler.version_control(st.session_state['version'], st.session_state['version_note'])
+
+            if control:
+                if 'has_products' not in st.session_state:
+                    st.session_state['has_products'] = data_handler.get_products(False)
+
+                if 'buymeacoffee' in st.secrets:
+                    if 'enabled' in st.secrets['buymeacoffee']:
+                        if st.secrets['buymeacoffee']['enabled'] and 'button' in st.secrets['buymeacoffee']:
+                            st.session_state['bmcbutton'] = st.secrets['buymeacoffee']['button']
 
 
-        #style_a_button()
-            st.session_state['feature_states'] = ['new', 'active', 'rejected', 'done']
-            st.session_state['feature_page'] = 0
-            st.session_state['next_page'] = False
-            st.session_state['admin_page'] = 0
-            st.session_state['step_size'] = 10
-            st.session_state['init'] = True
-            st.session_state['show_feature'] = False
-            st.session_state['user_id'] = 0
+                # query params
+                st.session_state.query_params = st.experimental_get_query_params()
+                if 'product' in st.session_state.query_params:
+                    st.session_state['query_product'] = st.session_state.query_params['product'][0]
+                if 'feature' in st.session_state.query_params:
+                    st.session_state['query_feature'] = st.session_state.query_params['feature'][0]
+                if 'user_mail' in st.session_state.query_params:
+                    st.session_state['user_mail'] = st.session_state.query_params['user_mail'][0]
+                else:
+                    st.session_state['user_mail'] = ''
+                st.session_state['tenant'] = st.secrets['tenant']
 
-            st.session_state['registered'] = False
-            st.session_state['user_essential'] = True
-            st.session_state['user_agreement'] = True
+                # Theme
+                st.session_state['primaryColor'] = st.get_option('theme.primaryColor')
+                st.session_state['backgroundColor'] = st.get_option('theme.backgroundColor')
+                st.session_state['secondaryBackgroundColor'] = st.get_option('theme.secondaryBackgroundColor')
+                st.session_state['textColor'] = st.get_option('theme.textColor')
+
+                st.session_state['feature_states'] = ['new', 'active', 'rejected', 'done']
+                #st.session_state['feature_page'] = 0
+                #st.session_state['next_page'] = False
+                #st.session_state['admin_page'] = 0
+                st.session_state['step_size'] = 10
+
+                st.session_state['show_feature'] = False
+                st.session_state['user_id'] = 0
+
+                st.session_state['registered'] = False
+                st.session_state['user_essential'] = True
+                st.session_state['user_agreement'] = True
+                st.session_state['init'] = True
+        else:
+            st.error('Database information missing.')
 
 
 def style_a_button():
@@ -285,21 +310,22 @@ def stylize():
 
 def bmac():
 
+    if 'bmcbutton' in st.session_state:
     # if bmac...
-    button = """
-            <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="pylutions" data-color="#62c07f" data-emoji=""  data-font="Poppins" data-text="" data-outline-color="#000000" data-font-color="#000000" data-coffee-color="#FFDD00" ></script>
-            """
-    html(button, width=74, height=80)
+    #button = """
+    #        <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="pylutions" data-color="#62c07f" data-emoji=""  data-font="Poppins" data-text="" data-outline-color="#000000" data-font-color="#000000" data-coffee-color="#FFDD00" ></script>
+    #        """
+        html(st.session_state.bmcbutton, width=74, height=80)
 
-    st.markdown(
-        """
-        <style>
-            iframe[width="74"] {
-                position: fixed;
-                top: 5%;
-                right: 0%;
-            }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
+        st.markdown(
+            """
+            <style>
+                iframe[width="74"] {
+                    position: fixed;
+                    top: 5%;
+                    right: 0%;
+                }
+            </style>
+            """,
+            unsafe_allow_html=True,
+        )
