@@ -13,18 +13,18 @@ def initialize():
                 st.session_state['tenant'] = st.secrets['tenant']['name']
             else:
                 st.error("Please add tenant name in the configuration.")
-                return
+                return False
             if 'admin' in st.secrets['tenant']:
                 st.session_state['admin'] = st.secrets['tenant']['admin']
             else:
                 st.error("Please add a tenant admin in the configuration.")
-                return
+                return False
             if 'password' not in st.secrets['tenant']:
                 st.error("Please add a tenant admin password in the configuration.")
-                return
+                return False
         else:
             st.error("Please add tenant information in the configuration.")
-            return
+            return False
 
         if 'feature_db' in st.secrets:
             control = data_handler.version_control(st.session_state['version'], st.session_state['version_note'])
@@ -70,8 +70,11 @@ def initialize():
                 st.session_state['user_essential'] = True
                 st.session_state['user_agreement'] = True
                 st.session_state['init'] = True
+                return True
         else:
             st.error('Database information missing.')
+    else:
+        return True
 
 
 def style_a_button():
