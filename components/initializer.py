@@ -301,7 +301,7 @@ def bmac():
         <style>
             iframe[width="74"] {
                 position: fixed;
-                top: 50px;
+                top: 5%;
                 right: 0%;
             }
         </style>
