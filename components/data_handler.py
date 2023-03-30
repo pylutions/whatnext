@@ -49,7 +49,7 @@ def version_control(version, version_note):
             ('products',
              "(product_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, product VARCHAR(255), url VARCHAR(255), state VARCHAR(255))"),
             ('users',
-             "(user_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, user_mail VARCHAR(255), essential BOOL, newsletter BOOL, join_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, auto_approve_comments BOOL DEFAULT 0)"),
+             "(user_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, user_mail VARCHAR(255), essential BOOL, newsletter BOOL, join_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, auto_approve_comments BOOL DEFAULT 0), banned BOOL DEFAULT 0"),
             ('features',
              "(feature_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, product_id int, feature_name VARCHAR(255), feature_description VARCHAR(1023), tags VARCHAR(1023), category VARCHAR(255), submitted TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, done_date TIMESTAMP, submitter int, vote_count int, status VARCHAR(255), FOREIGN KEY (product_id) REFERENCES products(product_id), FOREIGN KEY (submitter) REFERENCES users(user_id))"),
             ('upvotes',
