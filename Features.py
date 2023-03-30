@@ -111,7 +111,7 @@ if __name__ == "__main__":
                         st.session_state['user_essential'] = st.checkbox('Updates about your feature requests and upvotes.',
                                                                              value=st.session_state['user_essential'])
                         st.session_state['user_agreement'] = st.checkbox('Other product updates. No spam, just updates.',
-                                                                             st.session_state['user_agreement'])
+                                                                             value=st.session_state['user_agreement'])
                         change_pref = st.form_submit_button('Save')
                         if change_pref:
                             data_handler.update_user(st.session_state['user_id'],
