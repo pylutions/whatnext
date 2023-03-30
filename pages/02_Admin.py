@@ -11,7 +11,7 @@ if __name__ == "__main__":
     ui_elements.hide_header()
     st.title('Admin page')
     initializer.initialize()
-    initializer.stylize()
+    #initializer.stylize()
     if 'admin_logged_in' not in st.session_state:
         with st.form("admin_signin"):
             st.write("Please provide admin credentials:")

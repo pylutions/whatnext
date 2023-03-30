@@ -68,7 +68,7 @@ if __name__ == "__main__":
     tcol1, tcol2 = st.columns(2)
     tcol1.title('What next?')
     initializer.initialize()
-    initializer.stylize()
+    #initializer.stylize()
 
     if st.session_state['has_products']:
         show_sidebar()
