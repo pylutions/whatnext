@@ -73,6 +73,7 @@ def initialize():
                 return True
         else:
             st.error('Database information missing.')
+            return False
     else:
         return True
 
