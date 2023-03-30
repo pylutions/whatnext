@@ -63,12 +63,12 @@ def show_sidebar():
 
 if __name__ == "__main__":
     st.set_page_config(page_title="What next?", page_icon="icon.ico", layout="wide")
-    initializer.stylize()
+
     ui_elements.hide_header()
     tcol1, tcol2 = st.columns(2)
     tcol1.title('What next?')
     initializer.initialize()
-
+    initializer.stylize()
 
     if st.session_state['has_products']:
         show_sidebar()

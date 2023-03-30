@@ -10,6 +10,7 @@ def hide_header():
     st.markdown(hide_decoration_bar_style, unsafe_allow_html=True)
 
 
+
 def submit_feature_form(admin):
 
     with st.form("submit_feature", clear_on_submit=True):

@@ -3,16 +3,15 @@ import components.initializer as initializer
 import components.data_handler as data_handler
 import components.ui_elements as ui_elements
 import components.product_manager as product_manager
-from components.custom.pagebrowser import pagebrowser
 
 
 if __name__ == "__main__":
     st.set_page_config(page_title="What next?", page_icon="icon.ico", layout="wide")
-    initializer.stylize()
     ui_elements.hide_header()
     tcol1, tcol2 = st.columns(2)
     tcol1.title('Changelog')
     initializer.initialize()
+    initializer.stylize()
     if st.session_state['has_products']:
         with tcol2:
             product_index = product_manager.get_product_index()
@@ -36,7 +35,8 @@ if __name__ == "__main__":
                 col3.write(str(feature.vote_count))
                 st.write('---')
             ui_elements.page_browser(df)
-        #st.set_option('theme.primaryColor', 'white')
+        else:
+            st.write('No implemented features yet.')
 
 
 

@@ -79,15 +79,16 @@ def style_a_button():
 
 
 def stylize():
-    if 'read_colors' not in st.session_state:
-        st.session_state['primaryColor'] = st.secrets['theme']['primaryColor']
-        st.session_state['backgroundColor'] = st.secrets['theme']['backgroundColor']
-        st.session_state['secondaryBackgroundColor'] = st.secrets['theme']['secondaryBackgroundColor']
-        st.session_state['textColor'] = st.secrets['theme']['textColor']
-
-        st.session_state['read_colors'] = True
-
     primaryColor = st.session_state['primaryColor']
+    st.markdown(f"""
+            <style>
+            a, a: visited
+            {{
+                color: {primaryColor};
+            }}
+            </style>""", unsafe_allow_html=True)
+
+
     backgroundColor = st.session_state['backgroundColor']
     secondaryBackgroundColor = st.session_state['secondaryBackgroundColor']
     textColor = st.session_state['textColor']

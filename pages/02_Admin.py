@@ -7,10 +7,11 @@ import components.ui_elements as ui_elements
 
 if __name__ == "__main__":
     st.set_page_config(page_title="What next?", page_icon="icon.ico", layout="wide")
-    initializer.stylize()
+
     ui_elements.hide_header()
     st.title('Admin page')
     initializer.initialize()
+    initializer.stylize()
     if 'admin_logged_in' not in st.session_state:
         with st.form("admin_signin"):
             st.write("Please provide admin credentials:")
