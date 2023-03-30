@@ -287,21 +287,22 @@ def bmac():
 
     # if bmac...
     button = """
-            <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="pylutions" data-color="#62c07f" data-emoji=""  data-font="Arial" data-text="Buy me a coffee" data-outline-color="#000000" data-font-color="#000000" data-coffee-color="#FFDD00" ></script>
+            <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="pylutions" data-color="#62c07f" data-emoji=""  data-font="Poppins" data-text="" data-outline-color="#000000" data-font-color="#000000" data-coffee-color="#FFDD00" ></script>
             """
-    button = """
+    button2 = """
     <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="pylutions" data-description="Support me on Buy me a coffee!" data-message="" data-color="#62c07f" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
     """
 
-    html(button, width=500, height=700)
+    #html(button, width=500, height=700)
+    html(button, width=80, height=80)
 
     st.markdown(
         """
         <style>
-            iframe[width="500"] {
+            iframe[width="80"] {
                 position: fixed;
-                bottom: 60px;
-                right: 40px;
+                bottom: 100px;
+                right: 0%;
             }
         </style>
         """,
