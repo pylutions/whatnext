@@ -294,14 +294,14 @@ def bmac():
     """
 
     #html(button, width=500, height=700)
-    html(button, width=75, height=80)
+    html(button, width=74, height=80)
 
     st.markdown(
         """
         <style>
-            iframe[width="75"] {
+            iframe[width="74"] {
                 position: fixed;
-                bottom: 5vh;
+                bottom: 60px;
                 right: 0%;
             }
         </style>
