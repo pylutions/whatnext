@@ -72,13 +72,13 @@
         btn2.style.padding = "10px 10px 10px 10px";
         btn3.style.padding = "10px 10px 10px 10px";
         pglbl.style.padding = "10px 10px 10px 10px";
-        btn1.style.marginRight = "10%";
-        btn2.style.marginRight = "10%";
-        pglbl.style.marginRight = "10%";
-        btn1.style.width ="15%";
-        btn2.style.width ="15%";
-        pglbl.style.width ="15%";
-        btn3.style.width ="15%";
+        btn1.style.marginRight = "1%";
+        btn2.style.marginRight = "1%";
+        pglbl.style.marginRight = "1%";
+        btn1.style.width ="25%";
+        btn2.style.width ="25%";
+        pglbl.style.width ="25%";
+        btn3.style.width ="25%";
 
         pglbl.innerHTML = "Page " + (pagenum + 1);
         pglbl.style.fontFamily = "sans-serif";
@@ -88,13 +88,18 @@
             btn1.style.visibility = "hidden";
             btn2.style.visibility = "hidden";
         } else if (pagenum == 1) {
+            btn1.style.visibility = "visible";
             btn2.style.visibility = "hidden";
+        } else {
+            btn1.style.visibility = "visible";
+            btn2.style.visibility = "visible";
         }
         if (dataempty) {
             btn3.style.visibility = "hidden";
+        } else {
+            btn3.style.visibility = "visible";
         }
       }
-
 
       // Hook things up!
       window.addEventListener("message", onDataFromPython);

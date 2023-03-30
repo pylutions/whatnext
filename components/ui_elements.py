@@ -187,10 +187,12 @@ def list_view(type):
 
 def page_browser(data, page, name):
     reload_data = False
+    key = "pb"+name
     next = True
     value = pagebrowser(bgc=st.session_state['backgroundColor'],
                         txc=st.session_state['textColor'],
-                        pgn=page, dte=data.empty)
+                        pgn=page, dte=data.empty,
+                        key=key)
     if value == 1:
         page = 0
         reload_data = True
@@ -204,6 +206,7 @@ def page_browser(data, page, name):
     if page == 0:
         next = False
 
+    del st.session_state[key]
 
     return page, next, reload_data
 

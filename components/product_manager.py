@@ -49,7 +49,7 @@ def check_user():
             else:
                 return False
         else:
-            st.session_state['display_user_error'] = ('error', 'Invalid email address!')
+            #st.session_state['display_user_error'] = ('error', 'Invalid email address!')
             scr = """
                      <script type="text/javascript">alert("For voting and submitting please enter a valid email address in the sidebar.");</script>
                      """
