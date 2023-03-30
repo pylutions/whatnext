@@ -2,6 +2,7 @@ import streamlit as st
 from streamlit_tags import st_tags, st_tags_sidebar
 import components.product_manager as product_manager
 import components.data_handler as data_handler
+from components.custom.pagebrowser import pagebrowser
 
 
 def hide_header():
@@ -187,23 +188,22 @@ def list_view(type):
 def page_browser(data, page, name):
     reload_data = False
     next = True
-    col1, col2, col3, col4 = st.columns(4)
-    if page > 0:
-        if col1.button('First page', key="first"+name+str(page)):
-            page = 0
-            reload_data = True
-    if page > 1:
-        if col2.button('Previous page', key="prev"+name+str(page)):
-            page = page - 1
-            reload_data = True
-    col3.write("Page: " + str(page + 1))
+    value = pagebrowser(bgc=st.session_state['backgroundColor'],
+                        txc=st.session_state['textColor'],
+                        pgn=page, dte=data.empty)
+    if value == 1:
+        page = 0
+        reload_data = True
+    elif value == 2:
+        page = page - 1
+        reload_data = True
+    elif value == 3:
+        page = page + 1
+        reload_data = True
 
-    if not data.empty:
-        if col4.button('Next page', key="next"+name+str(page)):
-            page = page + 1
-            reload_data = True
     if page == 0:
         next = False
+
 
     return page, next, reload_data
 

@@ -3,7 +3,7 @@ import components.initializer as initializer
 import components.data_handler as data_handler
 import components.ui_elements as ui_elements
 import components.product_manager as product_manager
-from datetime import datetime
+from components.custom.pagebrowser import pagebrowser
 
 
 if __name__ == "__main__":
@@ -42,5 +42,40 @@ if __name__ == "__main__":
 
     else:
         st.write(f'The admin of **{st.session_state.tenant}** has not added any products yet.')
+
+
+    def button1_function():
+        st.write("Button 1 was clicked!")
+
+
+    def button2_function():
+        st.write("Button 2 was clicked!")
+
+    bg = st.get_option('theme.backgroundColor')
+    tx = st.get_option('theme.textColor')
+    st.write(bg)
+
+    st.markdown(f"""
+    <style>
+        .xxx {{
+            background-color: {bg};
+            color: white;
+            font-weight: bold;
+            border-radius: 5px;
+            padding: 10px;
+            margin-right: 10px;
+        }}
+    </style>
+
+    <div style="display:flex;">
+        <button class="xxx" onclick="button1_function()">Button 1</button>
+        <button class="xxx" onclick="button2_function()">Button 2</button>
+    </div>
+    """, unsafe_allow_html=True)
+
+    value = pagebrowser(bgc=bg, txc=tx, pgn=1, dte=True)
+    if value == 1:
+        st.write('btn 1')
+    st.button('Button 1')
 
     initializer.bmac()

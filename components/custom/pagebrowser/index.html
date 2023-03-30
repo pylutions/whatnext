@@ -1,0 +1,117 @@
+<html>
+  <body>
+    <!-- Set up your HTML here -->
+
+    <div style="display:flex;width:100%;">
+        <button id="btn1" onclick="btn_click(1)">First page</button>
+        <button id="btn2" onclick="btn_click(2)">Previous page</button>
+        <p id="pagelabel"></p>
+        <button id="btn3" onclick="btn_click(3)">Next page</button>
+    </div>
+
+    <script>
+      // ----------------------------------------------------
+      // Just copy/paste these functions as-is:
+
+      function sendMessageToStreamlitClient(type, data) {
+        var outData = Object.assign({
+          isStreamlitMessage: true,
+          type: type,
+        }, data);
+        window.parent.postMessage(outData, "*");
+      }
+
+      function init() {
+        sendMessageToStreamlitClient("streamlit:componentReady", {apiVersion: 1});
+      }
+
+      function setFrameHeight(height) {
+        sendMessageToStreamlitClient("streamlit:setFrameHeight", {height: height});
+      }
+
+      // The `data` argument can be any JSON-serializable value.
+      function sendDataToPython(data) {
+        sendMessageToStreamlitClient("streamlit:setComponentValue", data);
+      }
+
+      // ----------------------------------------------------
+      // Now modify this part of the code to fit your needs:
+
+      function btn_click(nr) {
+        sendDataToPython({
+          value: nr,
+          dataType: "json",
+        });
+      }
+
+
+      var btn1 = document.getElementById("btn1");
+      var btn2 = document.getElementById("btn2");
+      var pglbl = document.getElementById("pagelabel");
+      var btn3 = document.getElementById("btn3");
+
+      // data is any JSON-serializable value you sent from Python,
+      // and it's already deserialized for you.
+      function onDataFromPython(event) {
+        if (event.data.type !== "streamlit:render") return;
+        var bgcolor = event.data.args.bgc;  // Access values sent from Python here!
+        var txcolor = event.data.args.txc;
+        var pagenum = event.data.args.pgn;
+        var dataempty = event.data.args.dte;
+        btn1.style.backgroundColor = bgcolor;
+        btn2.style.backgroundColor = bgcolor;
+        btn3.style.backgroundColor = bgcolor;
+        btn1.style.color = txcolor;
+        btn2.style.color = txcolor;
+        btn3.style.color = txcolor;
+        pglbl.style.color = txcolor;
+        btn1.style.borderRadius = '5px';
+        btn2.style.borderRadius = '5px';
+        btn3.style.borderRadius = '5px';
+        btn1.style.padding = "10px 10px 10px 10px";
+        btn2.style.padding = "10px 10px 10px 10px";
+        btn3.style.padding = "10px 10px 10px 10px";
+        pglbl.style.padding = "10px 10px 10px 10px";
+        btn1.style.marginRight = "10vw";
+        btn2.style.marginRight = "10vw";
+        pglbl.style.marginRight = "10vw";
+        btn1.style.width ="15%";
+        btn2.style.width ="15%";
+        pglbl.style.width ="15%";
+        btn3.style.width ="15%";
+
+        pglbl.innerHTML = "Page " + (pagenum + 1);
+        pglbl.style.fontFamily = "sans-serif";
+        pglbl.style.fontSize = "small";
+
+        if (pagenum == 0) {
+            btn1.style.visibility = "hidden";
+            btn2.style.visibility = "hidden";
+        } else if (pagenum == 1) {
+            btn2.style.visibility = "hidden";
+        }
+        if (dataempty) {
+            btn3.style.visibility = "hidden";
+        }
+
+      }
+
+
+      // Hook things up!
+      window.addEventListener("message", onDataFromPython);
+      init();
+
+      // Hack to autoset the iframe height.
+      window.addEventListener("load", function() {
+        window.setTimeout(function() {
+          setFrameHeight(document.documentElement.clientHeight)
+        }, 0);
+      });
+      //document.getElementById("navbutton").style.background-color = bgcolor;
+
+      // Optionally, if the automatic height computation fails you, give this component a height manually
+      // by commenting out below:
+      //setFrameHeight(200);
+    </script>
+  </body>
+</html>

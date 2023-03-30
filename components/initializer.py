@@ -27,7 +27,11 @@ def initialize():
                 st.session_state['user_mail'] = ''
             st.session_state['tenant'] = st.secrets['tenant']
 
-
+            # Theme
+            st.session_state['primaryColor'] = st.get_option('theme.primaryColor')
+            st.session_state['backgroundColor'] = st.get_option('theme.backgroundColor')
+            st.session_state['secondaryBackgroundColor'] = st.get_option('theme.secondaryBackgroundColor')
+            st.session_state['textColor'] = st.get_option('theme.textColor')
 
 
         #style_a_button()
