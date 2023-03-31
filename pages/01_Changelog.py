@@ -3,6 +3,7 @@ import components.initializer as initializer
 import components.data_handler as data_handler
 import components.ui_elements as ui_elements
 import components.product_manager as product_manager
+from components.custom.socialshare import socialshare
 
 
 if __name__ == "__main__":
@@ -26,5 +27,7 @@ if __name__ == "__main__":
 
         else:
             st.write(f'The admin of **{st.session_state.tenant}** has not added any products yet.')
+
+        #socialshare()
 
         initializer.bmac()

@@ -4,9 +4,11 @@ import pandas as pd
 from datetime import datetime
 
 
+def checkdbc(dbc):
+    return dbc.is_connected()
 
 
-#@st.cache_resource
+@st.cache_resource(validate=checkdbc)
 def get_database_connection():
     dbc = mysql.connector.connect(**st.secrets["feature_db"])
     return dbc
@@ -69,8 +71,9 @@ def version_control(version, version_note):
 
             cursor.close()
             return True
-    except:
+    except Exception as e:
         st.error('Something went wrong with the database connection. If you are the admin, please check the configuration.')
+        st.write(e)
 
 
 

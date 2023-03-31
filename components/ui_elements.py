@@ -3,6 +3,7 @@ from streamlit_tags import st_tags, st_tags_sidebar
 import components.product_manager as product_manager
 import components.data_handler as data_handler
 from components.custom.pagebrowser import pagebrowser
+from components.custom.listitem import listitem
 
 
 def hide_header():
@@ -101,6 +102,7 @@ def show_feature(feature):
 def upvote(feature_id):
     if product_manager.check_user():
         data_handler.register_upvote(feature_id, st.session_state.user_id)
+       # st.experimental_rerun()
 
 
 def list_view(type):
@@ -117,16 +119,23 @@ def list_view(type):
             st.write('---')
             for ind, feature in df.iterrows():
                 feature_id = feature.feature_id
-                clbt, col1, col2, col3, col4 = st.columns([1, 2, 3, 1, 1])
+                clbt, col1, col2, upv = st.columns([1, 2, 3, 2])
                 clbt.button('Show', key='show' + str(ind), on_click=show, args=[feature_id])
                 col1.write(feature.feature_name)
                 col2.write(feature.feature_description)
-                col3.write(str(feature.vote_count))
-                col4.button('Upvote', key='upvote' + str(ind), on_click=upvote, args=[feature_id])
+                #col3.write(str(feature.vote_count))
+                #col4.button('Upvote', key='upvote' + str(ind), on_click=upvote, args=[feature_id])
+                with upv:
+                    value = display_upvotes(feature.vote_count, feature_id)
+                    if value == 1:
+                        st.info('Comment function not implemented yet.')
+                    elif value == 2:
+                        reloadx = True
+                        upvote(feature_id)
                 st.write('---')
             st.session_state['feature_backlog_page'], st.session_state['feature_backlog_next'], reload = page_browser(df, st.session_state['feature_backlog_page'], 'feature_backlog')
 
-            if reload:
+            if reload or reloadx:
                 st.experimental_rerun()
         else:
             st.write('No open feature requests. Submit one?')
@@ -213,6 +222,15 @@ def list_view(type):
             st.write('No finished feature requests.')
 
 
+def display_upvotes(vc, fid):
+    key = 'upv' + str(fid)
+    value = listitem(bgc=st.session_state['backgroundColor'],
+                     txc=st.session_state['textColor'],
+                     upv=vc,
+                     key=key)
+
+    del st.session_state[key]
+    return value
 
 
 def page_browser(data, page, name):
