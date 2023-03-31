@@ -2,7 +2,7 @@
   <body>
     <!-- Set up your HTML here -->
 
-    <div style="display:flex;width:100%;">
+    <div style="display:flex;width:100%;min-width:180px;">
         <button id="btn1" onclick="btn_click(1)">Comment</button>
         <p id="upvotelabel"></p>
         <button id="btn2" onclick="btn_click(2)">Upvote</button>
@@ -68,7 +68,9 @@
         btn2.style.marginRight = "1%";
         pglbl.style.marginRight = "1%";
         btn1.style.width ="33%";
+        btn1.style.minWidth = "80px";
         btn2.style.width ="33%";
+        btn2.style.minWidth = "80px";
         pglbl.style.width ="33%";
 
         pglbl.innerHTML = upvotes;

@@ -117,6 +117,7 @@ def list_view(type):
                                                            "vote_count DESC")
         if not df.empty or st.session_state.feature_backlog_next:
             st.write('---')
+            reloadx = False
             for ind, feature in df.iterrows():
                 feature_id = feature.feature_id
                 clbt, col1, col2, upv = st.columns([1, 2, 3, 2])

@@ -8,10 +8,15 @@ def checkdbc(dbc):
     return dbc.is_connected()
 
 
-@st.cache_resource(validate=checkdbc)
+#@st.cache_resource(validate=checkdbc)
 def get_database_connection():
-    dbc = mysql.connector.connect(**st.secrets["feature_db"])
-    return dbc
+    if 'dbc' not in st.session_state:
+        st.session_state['dbc'] = mysql.connector.connect(**st.secrets["feature_db"])
+
+    if not st.session_state['dbc'].is_connected():
+        st.session_state['dbc'] = mysql.connector.connect(**st.secrets["feature_db"])
+
+    return st.session_state['dbc']
 
 
 def get_products(force):
