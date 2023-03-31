@@ -4,6 +4,7 @@ import components.product_manager as product_manager
 import components.data_handler as data_handler
 from components.custom.pagebrowser import pagebrowser
 from components.custom.listitem import listitem
+from components.custom.titlebutton import titlebutton
 
 
 def hide_header():
@@ -120,10 +121,16 @@ def list_view(type):
             reloadx = False
             for ind, feature in df.iterrows():
                 feature_id = feature.feature_id
-                clbt, col1, col2, upv = st.columns([1, 2, 3, 2])
-                clbt.button('Show', key='show' + str(ind), on_click=show, args=[feature_id])
-                col1.write(feature.feature_name)
-                col2.write(feature.feature_description)
+                clbt, desc, upv = st.columns([2, 3, 2])
+                with clbt:
+                    fclick = display_titlebutton(feature.vote_count, feature_id, feature.feature_name)
+                    if fclick == 1:
+                        reloadx = True
+                        show(feature_id)
+
+                #clbt.button('Show', key='show' + str(ind), on_click=show, args=[feature_id])
+                #col1.write(feature.feature_name)
+                desc.write(feature.feature_description)
                 #col3.write(str(feature.vote_count))
                 #col4.button('Upvote', key='upvote' + str(ind), on_click=upvote, args=[feature_id])
                 with upv:
@@ -228,6 +235,18 @@ def display_upvotes(vc, fid):
     value = listitem(bgc=st.session_state['backgroundColor'],
                      txc=st.session_state['textColor'],
                      upv=vc,
+                     key=key)
+
+    del st.session_state[key]
+    return value
+
+
+def display_titlebutton(vc, fid, title):
+    key = 'ttb' + str(fid)
+    value = titlebutton(bgc=st.session_state['backgroundColor'],
+                     txc=st.session_state['textColor'],
+                     upv=vc,
+                     tit=title,
                      key=key)
 
     del st.session_state[key]

@@ -3,7 +3,6 @@ import components.initializer as initializer
 import components.data_handler as data_handler
 import components.ui_elements as ui_elements
 import components.product_manager as product_manager
-from components.custom.socialshare import socialshare
 
 
 if __name__ == "__main__":

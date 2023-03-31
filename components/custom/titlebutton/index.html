@@ -1,0 +1,97 @@
+<html>
+  <body>
+    <!-- Set up your HTML here -->
+
+    <div style="display:flex;width:100%;min-width:180px;">
+        <button id="btn1" onclick="btn_click(1)">
+          <div style="display:flex;">
+            <div id="p1"></div>
+            <div id="p2"></div>
+          </div>
+        </button>
+    </div>
+
+    <script>
+      // ----------------------------------------------------
+      // Just copy/paste these functions as-is:
+
+      function sendMessageToStreamlitClient(type, data) {
+        var outData = Object.assign({
+          isStreamlitMessage: true,
+          type: type,
+        }, data);
+        window.parent.postMessage(outData, "*");
+      }
+
+      function init() {
+        sendMessageToStreamlitClient("streamlit:componentReady", {apiVersion: 1});
+      }
+
+      function setFrameHeight(height) {
+        sendMessageToStreamlitClient("streamlit:setFrameHeight", {height: height});
+      }
+
+      // The `data` argument can be any JSON-serializable value.
+      function sendDataToPython(data) {
+        sendMessageToStreamlitClient("streamlit:setComponentValue", data);
+      }
+
+      // ----------------------------------------------------
+      // Now modify this part of the code to fit your needs:
+
+      function btn_click(nr) {
+        sendDataToPython({
+          value: nr,
+          dataType: "json",
+        });
+      }
+
+      var btn1 = document.getElementById("btn1");
+      var p1 = document.getElementById("p1");
+      var p2 = document.getElementById("p2");
+
+      // data is any JSON-serializable value you sent from Python,
+      // and it's already deserialized for you.
+      function onDataFromPython(event) {
+        if (event.data.type !== "streamlit:render") return;
+        var bgcolor = event.data.args.bgc;  // Access values sent from Python here!
+        var txcolor = event.data.args.txc;
+        var upvotes = event.data.args.upv;
+        var title = event.data.args.tit;
+        btn1.style.backgroundColor = bgcolor;
+        btn1.style.color = txcolor;
+        btn1.style.borderRadius = '5px';
+        btn1.style.padding = "10px 10px 10px 10px";
+        btn1.style.marginRight = "1%";
+        btn1.style.width = "100%";
+
+
+        p1.innerHTML = upvotes;
+        p1.style.fontFamily = "sans-serif";
+        p1.style.fontSize = "large";
+        p1.style.textAlign = "center";
+        p1.style.width = "25%";
+        p2.innerHTML = title;
+        p2.style.fontFamily = "sans-serif";
+        p2.style.fontSize = "small";
+        p2.style.textAlign = "center";
+
+      }
+
+      // Hook things up!
+      window.addEventListener("message", onDataFromPython);
+      init();
+
+      // Hack to autoset the iframe height.
+      window.addEventListener("load", function() {
+        window.setTimeout(function() {
+          setFrameHeight(document.documentElement.clientHeight)
+        }, 0);
+      });
+
+      // Optionally, if the automatic height computation fails you, give this component a height manually
+      // by commenting out below:
+      setFrameHeight(100);
+    </script>
+  </body>
+</html>
