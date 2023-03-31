@@ -57,8 +57,11 @@
         var bgcolor = event.data.args.bgc;  // Access values sent from Python here!
         var txcolor = event.data.args.txc;
         var upvotes = event.data.args.upv;
+        var prcolor = event.data.args.prc;
         var title = event.data.args.tit;
         btn1.style.backgroundColor = bgcolor;
+        btn1.style.borderColor = prcolor;
+        btn1.style.borderWidth = "thin";
         btn1.style.color = txcolor;
         btn1.style.borderRadius = '5px';
         btn1.style.padding = "10px 10px 10px 10px";
@@ -74,7 +77,8 @@
         p2.innerHTML = title;
         p2.style.fontFamily = "sans-serif";
         p2.style.fontSize = "small";
-        p2.style.textAlign = "center";
+        p2.style.width = "75%";
+        p2.style.textAlign = "left";
 
       }
 

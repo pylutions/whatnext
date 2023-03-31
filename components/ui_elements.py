@@ -130,7 +130,8 @@ def list_view(type):
 
                 #clbt.button('Show', key='show' + str(ind), on_click=show, args=[feature_id])
                 #col1.write(feature.feature_name)
-                desc.write(feature.feature_description)
+                fd = (feature.feature_description[:255] + '...') if len(feature.feature_description) > 75 else feature.feature_description
+                desc.write(fd)
                 #col3.write(str(feature.vote_count))
                 #col4.button('Upvote', key='upvote' + str(ind), on_click=upvote, args=[feature_id])
                 with upv:
@@ -244,10 +245,11 @@ def display_upvotes(vc, fid):
 def display_titlebutton(vc, fid, title):
     key = 'ttb' + str(fid)
     value = titlebutton(bgc=st.session_state['backgroundColor'],
-                     txc=st.session_state['textColor'],
-                     upv=vc,
-                     tit=title,
-                     key=key)
+                        txc=st.session_state['textColor'],
+                        prc=st.session_state['primaryColor'],
+                        upv=vc,
+                        tit=title,
+                        key=key)
 
     del st.session_state[key]
     return value
