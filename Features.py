@@ -8,14 +8,18 @@ import components.ui_elements as ui_elements
 
 def register(container):
     with st.form(key='reg'+str(container)):
+        if 'user_mail' in st.session_state:
+            mail = st.session_state.user_mail
+        else:
+            mail = ''
         st.session_state.user_mail = st.text_input('E-Mail', placeholder='me@email.com',
-                                                   label_visibility='collapsed', value=st.session_state['user_mail'])
+                                                   label_visibility='collapsed', value=mail)
 
         if st.session_state['registered']:
             st.session_state['user_essential'] = st.checkbox('Updates about your feature requests and upvotes.',
                                                              value=st.session_state['user_essential'])
             st.session_state['user_agreement'] = st.checkbox('Other product updates. No spam, just updates.',
-                                                             st.session_state['user_agreement'])
+                                                             value=st.session_state['user_agreement'])
             btn_text = 'Update'
         else:
             btn_text = "Register/Sign in"
