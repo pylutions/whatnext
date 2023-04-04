@@ -2,13 +2,10 @@
   <body>
     <!-- Set up your HTML here -->
 
-    <div style="display:flex;width:100%;min-width:180px;height:100px;">
-        <button id="btn1" onclick="btn_click(1)">
-          <div style="display:flex;">
-            <div id="p1"></div>
-            <div id="p2"></div>
-          </div>
-        </button>
+    <div style="display:flex;width:100%;min-width:180px;">
+      <button id="btn1" onclick="btn_click(1)">Show</button>
+      <div id="p1"></div>
+      <div id="p2"></div>
     </div>
 
     <script>
@@ -60,25 +57,28 @@
         var prcolor = event.data.args.prc;
         var title = event.data.args.tit;
         btn1.style.backgroundColor = bgcolor;
-        btn1.style.borderColor = prcolor;
+        //btn1.style.borderColor = prcolor;
         btn1.style.borderWidth = "thin";
         btn1.style.color = txcolor;
         btn1.style.borderRadius = '5px';
         //btn1.style.padding = "10px 10px 10px 10px";
         //btn1.style.marginRight = "1%";
-        btn1.style.width = "100%";
+        btn1.style.height = "50px";
+        btn1.style.width = "15%";
 
 
         p1.innerHTML = upvotes;
         p1.style.fontFamily = "sans-serif";
         p1.style.fontSize = "large";
         p1.style.textAlign = "center";
-        p1.style.width = "25%";
+        p1.style.width = "15%";
+        p1.style.color = txcolor;
         p2.innerHTML = title;
         p2.style.fontFamily = "sans-serif";
         p2.style.fontSize = "medium";
-        p2.style.width = "75%";
+        p2.style.width = "70%";
         p2.style.textAlign = "left";
+        p2.style.color = txcolor;
 
       }
 
