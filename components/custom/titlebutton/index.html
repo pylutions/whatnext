@@ -3,8 +3,8 @@
     <!-- Set up your HTML here -->
 
     <div style="display:flex;width:100%;min-width:180px;">
-      <button id="btn1" onclick="btn_click(1)">Show</button>
       <div id="p1"></div>
+      <button id="btn1" onclick="btn_click(1)">Show</button>
       <div id="p2"></div>
     </div>
 
@@ -62,7 +62,7 @@
         btn1.style.color = txcolor;
         btn1.style.borderRadius = '5px';
         //btn1.style.padding = "10px 10px 10px 10px";
-        //btn1.style.marginRight = "1%";
+        btn1.style.marginRight = "5%";
         btn1.style.height = "50px";
         btn1.style.width = "15%";
 
@@ -73,6 +73,7 @@
         p1.style.textAlign = "center";
         p1.style.width = "15%";
         p1.style.color = txcolor;
+        p1.style.marginTop = "17px";
         p2.innerHTML = title;
         p2.style.fontFamily = "sans-serif";
         p2.style.fontSize = "medium";
