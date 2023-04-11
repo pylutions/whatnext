@@ -5,15 +5,14 @@ from streamlit.components.v1 import html
 
 
 categories = ['Feature', 'Bug']
-
-
 regex = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
+
 
 def is_valid(email):
     if re.fullmatch(regex, email):
-      return True
+        return True
     else:
-      return False
+        return False
 
 
 def get_product_index():
@@ -31,8 +30,8 @@ def get_product_url():
 
 
 def get_product_table_id():
-    id = st.session_state.products_table.loc[st.session_state.products_table['product'] == st.session_state.selected_product].values[0, 0]
-    return id
+    pid = st.session_state.products_table.loc[st.session_state.products_table['product'] == st.session_state.selected_product].values[0, 0]
+    return pid
 
 
 def check_user():

@@ -103,10 +103,11 @@ def fetch_features_by_product_status(product, status, page, orderby):
 
 
 def fetch_features_by_status_with_mail(status, page):
+    orderby = "vote_count DESC"
     start = page * st.session_state.step_size
     limit = str(start) + "," + str(st.session_state.step_size)
     clause = f" WHERE features.status='{status}'"
-    query = "SELECT features.*, users.user_mail FROM features JOIN users ON features.submitter = users.user_id" + clause +" LIMIT " + limit
+    query = "SELECT features.*, users.user_mail, products.product FROM features JOIN users ON features.submitter = users.user_id JOIN products ON features.product_id = products.product_id" + clause +" ORDER BY "+orderby+" LIMIT " + limit
     return fetch_features(query)
 
 def fetch_feature_by_id(fid):
@@ -140,6 +141,19 @@ def register_upvote(feature, user):
         cursor.execute(query, values)
         dbc.commit()
         st.session_state['display_user_error'] = ('info', 'Thanks for voting!')
+
+
+def update_feature(feature, status, title, desc):
+    dbc = get_database_connection()
+    cursor = dbc.cursor()
+    done_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    if status == 'done':
+        query = f"UPDATE features SET status='{status}' AND done_date='{done_date}' WHERE feature_id={feature}"
+    else:
+        query = f"UPDATE features SET status='{status}' AND feature_name='{title}' AND feature_description='{desc}' WHERE feature_id={feature}"
+    st.write(query)
+    cursor.execute(query)
+    dbc.commit()
 
 
 def update_feature_status(feature, status):

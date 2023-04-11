@@ -106,7 +106,10 @@ if __name__ == "__main__":
 
             with tab2:
                 st.header('Submit a request')
-                ui_elements.submit_feature_form(False)
+                if st.session_state['registered']:
+                    ui_elements.submit_feature_form(False)
+                else:
+                    register(2)
             with tab3:
                 st.header('My account')
                 if st.session_state['registered']:

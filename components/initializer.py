@@ -315,10 +315,6 @@ def stylize():
 def bmac():
 
     if 'bmcbutton' in st.session_state:
-    # if bmac...
-    #button = """
-    #        <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="pylutions" data-color="#62c07f" data-emoji=""  data-font="Poppins" data-text="" data-outline-color="#000000" data-font-color="#000000" data-coffee-color="#FFDD00" ></script>
-    #        """
         html(st.session_state.bmcbutton, width=74, height=80)
 
         st.markdown(

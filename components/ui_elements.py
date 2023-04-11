@@ -75,8 +75,9 @@ def del_data():
         del st.session_state['data']
 
 
-def approve(feature):
-    data_handler.update_feature_status(feature, 'active')
+def approve(feature, title, desc):
+    data_handler.update_feature(feature, 'active', title, desc)
+    #data_handler.update_feature_status(feature, 'active')
 
 
 def reject(feature):
@@ -89,6 +90,11 @@ def delete(feature):
 
 def update(feature):
     st.write('Update: '+str(feature))
+
+
+def done(feature):
+    data_handler.update_feature_status(feature, 'done')
+
 
 
 def show(feature):
@@ -160,11 +166,11 @@ def list_view(type):
             for ind, feature in df.iterrows():
                 feature_id = feature.feature_id
                 col1, col2, col3, col4, col5, col6 = st.columns([1, 2, 4, 2, 1, 1])
-                col1.write(feature['product_id'])
-                col2.write(feature.feature_name)
-                col3.write(feature.feature_description)
+                col1.write(feature['product'])
+                title = col2.text_input("Title", key="atii" + str(ind), value=feature.feature_name)
+                desc = col3.text_area("Description", key="adei" + str(ind), value=feature.feature_description)
                 col4.write(feature.user_mail)
-                col5.button('Approve', key='approve' + str(ind), on_click=approve, args=[feature_id])
+                col5.button('Approve', key='approve' + str(ind), on_click=approve, args=[feature_id, title, desc])
                 col6.button('Reject', key='reject' + str(ind), on_click=reject, args=[feature_id])
 
                 st.write('---')
@@ -185,13 +191,15 @@ def list_view(type):
 
             for ind, feature in df.iterrows():
                 feature_id = feature.feature_id
-                col1, col2, col3, col4, col5, col6 = st.columns([1, 2, 4, 2, 1, 1])
-                col1.write(feature['product_id'])
-                col2.write(feature.feature_name)
-                col3.write(feature.feature_description)
+                col1, col2, col3, col4, col5, col6, col7 = st.columns([1, 2, 4, 2, 1, 1, 1])
+                col1.write(feature['product'])
+                col1.write(str(feature['vote_count']))
+                col2.text_input("Title", key="tii" + str(ind), value=feature.feature_name)
+                col3.text_area("Description", key="dei" + str(ind), value=feature.feature_description)
                 col4.write(feature.user_mail)
                 col5.button('Update', key='update' + str(ind), on_click=update, args=[feature_id])
-                col6.button('Delete', key='delete' + str(ind), on_click=delete, args=[feature_id])
+                col6.button('Done', key='done' + str(ind), on_click=done, args=[feature_id])
+                col7.button('Delete', key='delete' + str(ind), on_click=delete, args=[feature_id])
 
                 st.write('---')
 
